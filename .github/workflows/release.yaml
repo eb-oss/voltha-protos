@@ -8,6 +8,11 @@ on:
     tags:
       - v*.*.*
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Enter the Git tag to build (e.g., v1.2.3)'
+        required: false
+        type: string
 
 jobs:
   publish:
@@ -16,6 +21,8 @@ jobs:
       - name: Checkout repository
         # yamllint disable-line rule:line-length
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          ref: ${{ github.event.inputs.tag_name || github.ref }}
 
       - name: Configure Python
         # yamllint disable-line rule:line-length
