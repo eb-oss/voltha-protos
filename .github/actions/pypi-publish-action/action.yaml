@@ -28,29 +28,29 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Get and verify SemVer release tag
-      id: tag-check
-      shell: bash
-      run: |
-        set -eu -o pipefail
-        TAG=$(git tag --points-at HEAD | head -n1 || true)
-        if [ -z "$TAG" ]; then
-          echo "No git tag on HEAD, skipping publish"
-          echo "is-release=false" >> "$GITHUB_OUTPUT"
-          exit 0
-        fi
-        # Match vX.Y.Z or X.Y.Z (SemVer release, no pre-release suffix)
-        if [[ "$TAG" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-          echo "Found SemVer release tag: $TAG"
-          echo "is-release=true" >> "$GITHUB_OUTPUT"
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-        else
-          echo "Tag '$TAG' is not a SemVer release version, skipping publish"
-          echo "is-release=false" >> "$GITHUB_OUTPUT"
-        fi
+    # - name: Get and verify SemVer release tag
+    #   id: tag-check
+    #   shell: bash
+    #   run: |
+    #     set -eu -o pipefail
+    #     TAG=$(git tag --points-at HEAD | head -n1 || true)
+    #     if [ -z "$TAG" ]; then
+    #       echo "No git tag on HEAD, skipping publish"
+    #       echo "is-release=false" >> "$GITHUB_OUTPUT"
+    #       exit 0
+    #     fi
+    #     # Match vX.Y.Z or X.Y.Z (SemVer release, no pre-release suffix)
+    #     if [[ "$TAG" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    #       echo "Found SemVer release tag: $TAG"
+    #       echo "is-release=true" >> "$GITHUB_OUTPUT"
+    #       echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+    #     else
+    #       echo "Tag '$TAG' is not a SemVer release version, skipping publish"
+    #       echo "is-release=false" >> "$GITHUB_OUTPUT"
+    #     fi
 
     - name: Run prep commands
-      if: steps.tag-check.outputs.is-release == 'true' && inputs.prep-commands != ''
+      # if: steps.tag-check.outputs.is-release == 'true' && inputs.prep-commands != ''
       shell: bash
       run: |
         set -eu -o pipefail
@@ -84,9 +84,9 @@ runs:
           python3 -m build
 
           echo "Uploading to PyPI repository: ${{ inputs.pypi-index }}"
-          export TWINE_USERNAME="${{ inputs.pypi-username }}"
-          export TWINE_PASSWORD="${{ inputs.pypi-password }}"
-          twine upload -r "${{ inputs.pypi-index }}" dist/*
+          # export TWINE_USERNAME="${{ inputs.pypi-username }}"
+          # export TWINE_PASSWORD="${{ inputs.pypi-password }}"
+          twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
           cd "$GITHUB_WORKSPACE"
           echo "::endgroup::"
