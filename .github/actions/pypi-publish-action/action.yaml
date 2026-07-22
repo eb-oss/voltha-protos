@@ -58,7 +58,7 @@ runs:
         ${{ inputs.prep-commands }}
 
     - name: Build and publish packages
-      if: steps.tag-check.outputs.is-release == 'true'
+      # if: steps.tag-check.outputs.is-release == 'true'
       shell: bash
       env:
         TWINE_USERNAME: ${{ inputs.pypi-username }}
