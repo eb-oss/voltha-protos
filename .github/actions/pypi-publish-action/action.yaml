@@ -84,8 +84,8 @@ runs:
           python3 -m build
 
           echo "Uploading to PyPI repository: ${{ inputs.pypi-index }}"
-          # export TWINE_USERNAME="${{ inputs.pypi-username }}"
-          # export TWINE_PASSWORD="${{ inputs.pypi-password }}"
+          export TWINE_USERNAME="${{ inputs.pypi-username }}"
+          export TWINE_PASSWORD="${{ inputs.pypi-password }}"
           twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
           cd "$GITHUB_WORKSPACE"
