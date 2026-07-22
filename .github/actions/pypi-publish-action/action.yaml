@@ -86,7 +86,7 @@ runs:
           echo "Uploading to PyPI repository: ${{ inputs.pypi-index }}"
           # export TWINE_USERNAME="${{ inputs.pypi-username }}"
           # export TWINE_PASSWORD="${{ inputs.pypi-password }}"
-          twine upload -u "${{ inputs.pypi-username }}" -p "${{ inputs.pypi-password }}" --repository-url https://test.pypi.org/legacy/ dist/*
+          twine upload -r "${{ inputs.pypi-index }}" dist/*
 
           cd "$GITHUB_WORKSPACE"
           echo "::endgroup::"
